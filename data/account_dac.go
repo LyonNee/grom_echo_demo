@@ -2,10 +2,10 @@ package data
 
 import (
 	"errors"
+	"github.com/LyonNee/grom_echo_demo/model"
+	"github.com/LyonNee/grom_echo_demo/utils"
 	"github.com/jinzhu/gorm"
 	uuid "github.com/satori/go.uuid"
-	"grom_echo_demo/model"
-	"grom_echo_demo/utils"
 )
 
 func AddUser(nickname string, username string, password string) error {
@@ -23,10 +23,7 @@ func AddUser(nickname string, username string, password string) error {
 		return errors.New("user is exist")
 	}
 
-	uid, err := uuid.NewV4()
-	if err != nil {
-		panic("create uuid failed")
-	}
+	uid := uuid.NewV4()
 	user = model.User{UUID: uid.String(), Nickname: nickname, Username: username, Password: utils.GetMD5HashCode(password)}
 	db.Create(&user)
 	return nil

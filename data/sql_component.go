@@ -1,9 +1,9 @@
 package data
 
 import (
+	"github.com/LyonNee/grom_echo_demo/model"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
-	"grom_echo_demo/model"
 )
 
 func InitSql() {

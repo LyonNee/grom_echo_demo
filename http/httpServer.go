@@ -1,12 +1,12 @@
 package http
 
 import (
+	sql "github.com/LyonNee/grom_echo_demo/data"
+	"github.com/LyonNee/grom_echo_demo/model"
+	"github.com/LyonNee/grom_echo_demo/utils"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
-	sql "grom_echo_demo/data"
-	"grom_echo_demo/model"
-	"grom_echo_demo/utils"
 	"net/http"
 )
 
