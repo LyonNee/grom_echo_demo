@@ -12,3 +12,8 @@ type User struct {
 	Username string
 	Password string
 }
+
+type LoginIM struct {
+	Username string
+	Password string
+}

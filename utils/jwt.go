@@ -1,8 +1,9 @@
 package utils
 
 import (
-	"github.com/dgrijalva/jwt-go"
 	"time"
+
+	"github.com/dgrijalva/jwt-go"
 )
 
 type jwtCustomClaims struct {
@@ -26,11 +27,20 @@ func CreateJWT(SecretKey []byte, Uuid string, Nickname string) (tokenString stri
 	return
 }
 
-func ParseJWT(tokenSrt string, SecretKey []byte) (claims jwt.Claims, err error) {
-	var token *jwt.Token
-	token, err = jwt.Parse(tokenSrt, func(*jwt.Token) (interface{}, error) {
-		return SecretKey, nil
+func ParseJWT(tokenSrt string) (claims jwtCustomClaims, err error) {
+
+	tokenClaims, err := jwt.ParseWithClaims(tokenSrt, &claims, func(token *jwt.Token) (interface{}, error) {
+		cert := "-----BEGIN CERTIFICATE-----\n" + "secret" + "\n-----END CERTIFICATE-----"
+		_, _ = jwt.ParseRSAPublicKeyFromPEM([]byte(cert))
+
+		return claims, nil
 	})
-	claims = token.Claims
-	return
+
+	if tokenClaims != nil {
+		if claims, ok := tokenClaims.Claims.(jwtCustomClaims); ok && tokenClaims.Valid {
+			return claims, nil
+		}
+	}
+
+	return claims, err
 }

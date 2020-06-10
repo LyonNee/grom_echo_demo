@@ -2,14 +2,15 @@ package data
 
 import (
 	"errors"
+
 	"github.com/LyonNee/grom_echo_demo/model"
 	"github.com/LyonNee/grom_echo_demo/utils"
 	"github.com/jinzhu/gorm"
 	uuid "github.com/satori/go.uuid"
 )
 
-func AddUser(nickname string, username string, password string) error {
-	db, err := gorm.Open("mysql", "root:admin123@tcp(127.0.0.1:3306)/Hudson.DB?charset=utf8&parseTime=True&loc=Local")
+func AddUser(userinfo model.User) error {
+	db, err := gorm.Open("mysql", "root:admin123@tcp(127.0.0.1:3306)/hudsondb?charset=utf8&parseTime=True&loc=Local")
 	defer db.Close()
 
 	if err != nil {
@@ -17,20 +18,20 @@ func AddUser(nickname string, username string, password string) error {
 	}
 
 	var user = model.User{}
-	db.First(&user, "nickname = ?", nickname)
+	db.First(&user, "nickname = ?", userinfo.Nickname)
 
 	if user != (model.User{}) {
 		return errors.New("user is exist")
 	}
 
 	uid := uuid.NewV4()
-	user = model.User{UUID: uid.String(), Nickname: nickname, Username: username, Password: utils.GetMD5HashCode(password)}
+	user = model.User{UUID: uid.String(), Nickname: userinfo.Nickname, Username: userinfo.Username, Password: utils.GetMD5HashCode(userinfo.Password)}
 	db.Create(&user)
 	return nil
 }
 
 func GetUserByUsername(username string) (model.User, error) {
-	db, err := gorm.Open("mysql", "root:admin123@tcp(127.0.0.1:3306)/Hudson.DB?charset=utf8&parseTime=True&loc=Local")
+	db, err := gorm.Open("mysql", "root:admin123@tcp(127.0.0.1:3306)/hudsondb?charset=utf8&parseTime=True&loc=Local")
 	defer db.Close()
 
 	if err != nil {
